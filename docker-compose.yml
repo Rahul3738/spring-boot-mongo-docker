@@ -1,45 +1,36 @@
 version: '3.1'
 
 services:
-  springboot:
-    image: dockerhandson/spring-boot-mongo:latest
-    restart: always # This will be ignored if we deploy in docker swarm
-    environment:
-    - MONGO_DB_HOSTNAME=mongo
-    - MONGO_DB_USERNAME=devdb
-    - MONGO_DB_PASSWORD=devdb123
+  springapp:
+    image: rahultechmumbai/springapp:VERSION
     ports:
-      - 8080:8080
-    working_dir: /opt/app
-    depends_on:
-      - mongo
+    - 8080:8080
     networks:
-    - springappnetwork  
-    deploy:  # This will be considered only in docker swarm.
-      replicas: 2
-      update_config:
-        parallelism: 1
-        delay: 20s
-      restart_policy:
-        condition: on-failure
-        delay: 10s
-        max_attempts: 5
-
-  mongo:
-    image: mongo
+    - mybridge
     environment:
-    - MONGO_INITDB_ROOT_USERNAME=devdb
-    - MONGO_INITDB_ROOT_PASSWORD=devdb123
-    volumes:
-      - mongodb:/data/db
-    restart: always
-    networks:
-    - springappnetwork
+    - MONGO_DB_HOSTNAME=mongodb
+    - MONGO_DB_USERNAME=admin
+    - MONGO_DB_PASSWORD=admin@123
+    depends_on:
+    - mongodb  
     
+  mongodb:
+    image: mongo
+    networks:
+    - mybridge
+    environment:
+    - MONGO_INITDB_ROOT_USERNAME=admin
+    - MONGO_INITDB_ROOT_PASSWORD=admin@123
+    volumes:
+    - mongodb:/data/db    
+
 volumes:
   mongodb:
-    external: true
-    
+    driver: local
+    external: true # You have to manually create volume docker-compose will not create volume
+
 networks:
-  springappnetwork:
-    external: true
+  mybridge:
+    driver: bridge
+    external: true # You have to manually create n/w docker-compose will not create n/w
+      
