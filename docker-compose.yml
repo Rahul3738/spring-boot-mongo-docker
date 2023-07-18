@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   springapp:
-    image: rahultechmumbai/springapp:VERSION
+    image: rahultechmumbai/javaspringapp:VERSION
     ports:
     - 8080:8080
     networks:
