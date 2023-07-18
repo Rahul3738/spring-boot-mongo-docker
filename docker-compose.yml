@@ -26,11 +26,9 @@ services:
 
 volumes:
   mongodb:
-    driver: local
     external: true # You have to manually create volume docker-compose will not create volume
 
 networks:
   mybridge:
-    driver: bridge
     external: true # You have to manually create n/w docker-compose will not create n/w
       
